@@ -1,0 +1,11 @@
+---
+title: "Stephen Lemasney"
+---
+
+A blog of mostly Python and data tutorials.
+
+[Article 1](2018-01-01-run-pg-locally.html)
+
+[Article 2](2018-01-02-svp.html)
+
+[Article 3]()
