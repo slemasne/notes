@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>mysite – run-pg-locally</title>
+<title>Blog – run-pg-locally</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -134,7 +134,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container">
     <a class="navbar-brand" href="./index.html">
-    <span class="navbar-title">mysite</span>
+    <span class="navbar-title">Blog</span>
     </a>
   </div>
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
@@ -181,11 +181,6 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 
 <section id="running-a-postgres-database-locally" class="level1">
 <h1>Running a Postgres database locally</h1>
-<ul>
-<li>toc:true</li>
-<li>sticky_rank: 1</li>
-<li>author: Stephen Lemasney</li>
-</ul>
 <p>In this tutorial, I’ll show how you can run a <a href="https://www.postgresql.org/">Postgres</a> (also known as PostgreSQL) database locally in docker and connect to it using psql.</p>
 <section id="run-the-docker-container" class="level2">
 <h2 class="anchored" data-anchor-id="run-the-docker-container">Run the Docker container</h2>
@@ -267,16 +262,16 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>First we’ll want to exec into the postgres container:</p>
 <div class="sourceCode" id="cb5"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> exec <span class="at">-it</span> postgres bash</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Once you’re in the container you can run psql commands to query data:</p>
-<pre><code>root@12345abcde1:/#
-root@12345abcde1:/#  psql -U postgres -d employees -c "select * from employee_details"
-
- id | name  | age |                      address                       | salary | join_date
-----+-------+-----+----------------------------------------------------+--------+------------
-  1 | John  |  32 | London                                             |  20000 | 2001-07-13
-  2 | David |  25 | Dublin                                             |  30000 | 2007-12-13
-  3 | Sarah |  25 | Edinburgh                                          |  40000 | 2007-12-13
-
-root@12345abcde1:/#</code></pre>
+<div class="sourceCode" id="cb6"><pre class="sourceCode sql code-with-copy"><code class="sourceCode sql"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>root@12345abcde1:<span class="op">/</span>#</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>root@12345abcde1:<span class="op">/</span>#  psql <span class="op">-</span>U postgres <span class="op">-</span>d employees <span class="op">-</span>c <span class="ot">"select * from employee_details"</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a> <span class="kw">id</span> | name  | age |                      address                       | salary | join_date</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="co">----+-------+-----+----------------------------------------------------+--------+------------</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  <span class="dv">1</span> | John  |  <span class="dv">32</span> | London                                             |  <span class="dv">20000</span> | <span class="dv">2001</span><span class="op">-</span><span class="dv">07</span><span class="op">-</span><span class="dv">13</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>  <span class="dv">2</span> | David |  <span class="dv">25</span> | Dublin                                             |  <span class="dv">30000</span> | <span class="dv">2007</span><span class="op">-</span><span class="dv">12</span><span class="op">-</span><span class="dv">13</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>  <span class="dv">3</span> | Sarah |  <span class="dv">25</span> | Edinburgh                                          |  <span class="dv">40000</span> | <span class="dv">2007</span><span class="op">-</span><span class="dv">12</span><span class="op">-</span><span class="dv">13</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>root@12345abcde1:<span class="op">/</span>#</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 
 
 </section>
