@@ -4,8 +4,10 @@ title: "Stephen Lemasney"
 
 A blog of mostly Python and data tutorials.
 
-[Article 1](2018-01-01-run-pg-locally.html)
+[Run a Postres Database locally](run-pg-locally.html)
 
-[Article 2](2018-01-02-svp.html)
+[Data analysis on long distance running](svp.html)
 
-[Article 3]()
+[Deploying a Python app - Part 1 (Docker)](flask-app-with-docker.html)
+
+[Deploying a Python app - Part 2 (Kubernetes)](flask-app-with-k8s.html)
