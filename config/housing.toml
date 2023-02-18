@@ -1,0 +1,31 @@
+# Config for creating a housing dataset
+
+[price]
+type = "dist"
+mean = 500000
+sd = 200000
+
+[area]
+type = "min_max"
+max = 300
+min = 50
+
+[bathrooms]
+type = "min_max"
+max = 5
+min = 1
+
+[bedrooms]
+type = "min_max"
+max = 5
+min = 1
+
+[garage]
+type = "bool"
+
+[parking]
+type = "bool"
+
+[council_tax_band]
+type = "list"
+list = ["A", "B", "C", "D", "E"]
