@@ -4,6 +4,8 @@ title: "Stephen Lemasney"
 
 A blog of mostly Python and data tutorials.
 
+[Build a test CSV dataset](build-a-test-csv-dataset.html)
+
 [Run a Postres Database locally](run-pg-locally.html)
 
 [Data analysis on long distance running](svp.html)
