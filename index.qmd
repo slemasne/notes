@@ -13,3 +13,5 @@ A blog of mostly Python and data tutorials.
 [Deploying a Python app - Part 1 (Docker)](flask-app-with-docker.html)
 
 [Deploying a Python app - Part 2 (Kubernetes)](flask-app-with-k8s.html)
+
+[Mutable and immutable objects in Python](mutability.html)
