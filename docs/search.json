@@ -35,6 +35,13 @@
     "text": "A blog of mostly Python and data tutorials.\nBuild a test CSV dataset\nRun a Postres Database locally\nData analysis on long distance running\nDeploying a Python app - Part 1 (Docker)\nDeploying a Python app - Part 2 (Kubernetes)"
   },
   {
+    "objectID": "mutability.html",
+    "href": "mutability.html",
+    "title": "Blog",
+    "section": "",
+    "text": "In this post, we’ll have a look at mutable versus immutable objects in Python. Mutable objects are objects we can change whereas immutable objects are objects we cannot change.\nBefore we jump in, let’s have a quick look at the id function in Python. From the official Python docs:\nReturn the “identity” of an object. This is an integer which is guaranteed to be unique and constant for this object during its lifetime. Two objects with non-overlapping lifetimes may have the same id() value.\nWhy is this function helpful? We can use this function to verify that a mutable object has the same ID after we have changed it.\n\n# Create helper function to print object memory ID\n\ndef log_memory_address_id(a):\n    \n    print(f\"The list has internal memory address id: {id(a)}\")\n\n\n\nLet’s create a list to represent three of London’s tube lines:\n\na = [\"nothern\", \"central\", \"circle\"]\n\nprint(a)\n\nlog_memory_address_id(a)\n\n['nothern', 'central', 'circle']\nThe list has internal memory address id: 2454400216128\n\n\nNext we append a new line to the list and verify that the list has the same ID:\n\na.append(\"city\")\n\nprint(a)\n\nlog_memory_address_id(a)\n\n['nothern', 'central', 'circle', 'city']\nThe list has internal memory address id: 2454400216128\n\n\n\n\n\nNext we’ll have a look at strings. This time, however, we cannot modify a string object after it has been declared. Instead we need to declare a copy of the string object with any modifications (at the point of string initialization).\n\ntube_line = \"northern\"\n\nid(tube_line)\n\n2454399439024\n\n\n\n# The new object has a different Id\n\nid(tube_line + \"_tfl\")\n\n2454401150000\n\n\n\n\n\nBelow we’ve provided a summary of the mutability of other Python objects:\n\n\n\nObject\nImmutable?\n\n\n\n\nbool\nY\n\n\nint\nY\n\n\nfloat\nY\n\n\ntuple\nY\n\n\nstring\nY\n\n\nlist\nN\n\n\nset\nN\n\n\ndict\nN"
+  },
+  {
     "objectID": "run-pg-locally.html",
     "href": "run-pg-locally.html",
     "title": "Blog",
