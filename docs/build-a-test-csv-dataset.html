@@ -173,6 +173,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   <li><a href="#import-setup-packages" id="toc-import-setup-packages" class="nav-link" data-scroll-target="#import-setup-packages">Import setup packages</a></li>
   <li><a href="#import-config-using-a-toml-file" id="toc-import-config-using-a-toml-file" class="nav-link" data-scroll-target="#import-config-using-a-toml-file">Import config using a TOML file</a></li>
   <li><a href="#build-random-data-using-the-config-file" id="toc-build-random-data-using-the-config-file" class="nav-link" data-scroll-target="#build-random-data-using-the-config-file">Build random data using the config file</a></li>
+  <li><a href="#save-csv-file-to-local-data-folder" id="toc-save-csv-file-to-local-data-folder" class="nav-link" data-scroll-target="#save-csv-file-to-local-data-folder">Save CSV file to local data folder</a></li>
   <li><a href="#save-csv-file-to-s3" id="toc-save-csv-file-to-s3" class="nav-link" data-scroll-target="#save-csv-file-to-s3">Save CSV file to S3</a></li>
   </ul></li>
   </ul>
@@ -188,7 +189,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>In this tutorial, we’ll build a test data set. The dataset will be a simple real estate dataset showing attributes such as price, number of bedrooms, parking etc. The data is entirely fabricated. Once created, we’ll also show how you can load the data set as a CSV onto AWS S3.</p>
 <section id="import-setup-packages" class="level2">
 <h2 class="anchored" data-anchor-id="import-setup-packages">Import setup packages</h2>
-<div class="cell" data-execution_count="1">
+<div class="cell" data-execution_count="4">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> tomli</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pprint</span>
@@ -204,53 +205,33 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div class="sourceCode" id="cb2"><pre class="sourceCode yaml code-with-copy"><code class="sourceCode yaml"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Config for creating a housing dataset</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="kw">[</span><span class="at">tier</span><span class="dv">-1</span><span class="kw">]</span></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="at">price.range = "100000-200000"</span></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="at">bedrooms.range = "1-3"</span></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="at">bathrooms.range = "1-3"</span></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="at">council_tax.list = ["A", "B", "C"]</span></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="at">freehold.list = [true, false]</span></span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="at">garage.list = [false]</span></span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="at">parking.list = [true, false]</span></span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="kw">[</span><span class="at">tier</span><span class="dv">-2</span><span class="kw">]</span></span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="at">price.range = "200000-300000"</span></span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a><span class="at">bedrooms.range = "2-4"</span></span>
-<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a><span class="at">bathrooms.range = "2-4"</span></span>
-<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a><span class="at">council_tax.list = ["B", "C", "D"]</span></span>
-<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a><span class="at">freehold.list = [true, false]</span></span>
-<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a><span class="at">garage.list = [true, false]</span></span>
-<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a><span class="at">parking.list = [true, false]</span></span>
-<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a><span class="kw">[</span><span class="at">tier</span><span class="dv">-3</span><span class="kw">]</span></span>
-<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a><span class="at">price.range = "300000-400000"</span></span>
-<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a><span class="at">bedrooms.range = "3-5"</span></span>
-<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a><span class="at">bathrooms.range = "3-5"</span></span>
-<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a><span class="at">council_tax.list = ["D", "E", "F"]</span></span>
-<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a><span class="at">freehold.list = [true]</span></span>
-<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a><span class="at">garage.list = [true, false]</span></span>
-<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a><span class="at">parking.list = [true, false]</span></span>
-<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a><span class="kw">[</span><span class="at">tier</span><span class="dv">-4</span><span class="kw">]</span></span>
-<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a><span class="at">price.range = "400000-1000000"</span></span>
-<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a><span class="at">bedrooms.range = "3-8"</span></span>
-<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a><span class="at">bathrooms.range = "3-8"</span></span>
-<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a><span class="at">council_tax.list = ["D", "E", "F"]</span></span>
-<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a><span class="at">freehold.list = [true]</span></span>
-<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a><span class="at">garage.list = [true, false]</span></span>
-<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a><span class="at">parking.list = [true]</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell" data-execution_count="2">
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="at">price = "100000-200000"</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="at">bedrooms = "1-3"</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="at">bathrooms = "1-3"</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="at">estate_agent_code = "1-5" </span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="at">transport_link_code = "1-8"</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="at">council_tax = ["A", "B", "C"]</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="at">freehold = [true, false]</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="at">garage = [false]</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="at">parking = [true, false]</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a><span class="kw">[</span><span class="at">tier</span><span class="dv">-2</span><span class="kw">]</span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a><span class="co">...</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-execution_count="5">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> <span class="bu">open</span>(<span class="st">'config/housing.toml'</span>, <span class="st">'rb'</span>) <span class="im">as</span> file_obj:</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    housing_config <span class="op">=</span> tomli.load(file_obj)</span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    </span>
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>pprint.pprint(housing_config[<span class="st">"tier-1"</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>{'bathrooms': {'range': '1-3'},
- 'bedrooms': {'range': '1-3'},
- 'council_tax': {'list': ['A', 'B', 'C']},
- 'freehold': {'list': [True, False]},
- 'garage': {'list': [False]},
- 'parking': {'list': [True, False]},
- 'price': {'range': '100000-200000'}}</code></pre>
+<pre><code>{'bathrooms': '1-3',
+ 'bedrooms': '1-3',
+ 'council_tax': ['A', 'B', 'C'],
+ 'estate_agent_code': '1-5',
+ 'freehold': [True, False],
+ 'garage': [False],
+ 'parking': [True, False],
+ 'price': '100000-200000',
+ 'transport_link_code': '1-8'}</code></pre>
 </div>
 </div>
 </section>
@@ -265,7 +246,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <blockquote class="blockquote">
 <p><i>“The first rule of functions is that they should be small. The second rule of functions is that they should be smaller than that.”</i> -Robert C. Martin, Clean Code: A Handbook of Agile Software Craftsmanship</p>
 </blockquote>
-<div class="cell" data-execution_count="3">
+<div class="cell" data-execution_count="6">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> get_randint_from_range_str(range_str):</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    </span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
@@ -285,7 +266,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>    </span>
 <span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> rand_int <span class="cf">if</span> rand_int <span class="op">&lt;=</span> <span class="dv">100000</span> <span class="cf">else</span> <span class="bu">round</span>(rand_int, <span class="op">-</span><span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="cell" data-execution_count="4">
+<div class="cell" data-execution_count="7">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> get_random_tier_config(housing_config):</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    </span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>        <span class="co">"""</span></span>
@@ -301,7 +282,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>    </span>
 <span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> tier_config</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="cell" data-execution_count="5">
+<div class="cell" data-execution_count="17">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> generate_one_row_random_house_data(config):</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    </span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
@@ -313,21 +294,23 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> housing_attribute <span class="kw">in</span> config:</span>
 <span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>        </span>
-<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>        range_values <span class="op">=</span> config[housing_attribute].get(<span class="st">"range"</span>)</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>        housing_attribute_value <span class="op">=</span> config[housing_attribute]</span>
 <span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>        </span>
-<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>        list_values <span class="op">=</span> config[housing_attribute].get(<span class="st">"list"</span>)</span>
-<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> range_values:</span>
-<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>            </span>
-<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>            new_row[housing_attribute] <span class="op">=</span> get_randint_from_range_str(range_values)</span>
-<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> list_values:</span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> <span class="bu">type</span>(housing_attribute_value) <span class="op">==</span> <span class="bu">str</span>:</span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>            </span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>            <span class="co"># Note:</span></span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>            <span class="co"># In production, we'd employ some defensive programming here to ensure that strings</span></span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>            <span class="co"># loaded from the config are always in the form "{int}-{int}". For example: 2-8</span></span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>                        </span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>            new_row[housing_attribute] <span class="op">=</span> get_randint_from_range_str(housing_attribute_value)</span>
 <span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a>            new_row[housing_attribute] <span class="op">=</span> random.choice(list_values)</span>
-<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a>            </span>
-<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> new_row</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> <span class="bu">type</span>(housing_attribute_value) <span class="op">==</span> <span class="bu">list</span>:</span>
+<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a>            new_row[housing_attribute] <span class="op">=</span> random.choice(housing_attribute_value)</span>
+<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a>            </span>
+<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> new_row</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="cell" data-execution_count="6">
+<div class="cell" data-execution_count="18">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> generate_housing_df(housing_config, row_size<span class="op">=</span><span class="dv">1000000</span>):</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    </span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
@@ -348,10 +331,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> pd.DataFrame(df_rows)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<div class="cell" data-execution_count="7">
+<div class="cell" data-execution_count="19">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> generate_housing_df(housing_config)</span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>df.head(<span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="7">
+<div class="cell-output cell-output-display" data-execution_count="19">
 
 <div>
 
@@ -362,6 +345,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
       <th>price</th>
       <th>bedrooms</th>
       <th>bathrooms</th>
+      <th>estate_agent_code</th>
+      <th>transport_link_code</th>
       <th>council_tax</th>
       <th>freehold</th>
       <th>garage</th>
@@ -371,44 +356,50 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   <tbody>
     <tr>
       <th>0</th>
-      <td>295000</td>
+      <td>304000</td>
+      <td>4</td>
       <td>3</td>
       <td>4</td>
-      <td>B</td>
+      <td>7</td>
+      <td>F</td>
       <td>True</td>
       <td>True</td>
       <td>False</td>
     </tr>
     <tr>
       <th>1</th>
-      <td>151000</td>
-      <td>3</td>
+      <td>218000</td>
       <td>2</td>
+      <td>3</td>
+      <td>3</td>
+      <td>7</td>
       <td>B</td>
-      <td>True</td>
       <td>False</td>
+      <td>True</td>
       <td>False</td>
     </tr>
     <tr>
       <th>2</th>
-      <td>378000</td>
+      <td>100000</td>
+      <td>1</td>
+      <td>2</td>
       <td>5</td>
-      <td>3</td>
-      <td>D</td>
-      <td>True</td>
+      <td>8</td>
+      <td>C</td>
       <td>True</td>
       <td>False</td>
+      <td>True</td>
     </tr>
   </tbody>
 </table>
 </div>
 </div>
 </div>
-<div class="cell" data-execution_count="8">
+<div class="cell" data-execution_count="21">
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Check the statistical dispersion of the sample data</span></span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>df.describe()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="8">
+<div class="cell-output cell-output-display" data-execution_count="21">
 
 <div>
 
@@ -419,6 +410,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
       <th>price</th>
       <th>bedrooms</th>
       <th>bathrooms</th>
+      <th>estate_agent_code</th>
+      <th>transport_link_code</th>
     </tr>
   </thead>
   <tbody>
@@ -427,47 +420,63 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
       <td>1000000.000000</td>
       <td>1000000.000000</td>
       <td>1000000.000000</td>
+      <td>1000000.000000</td>
+      <td>1000000.000000</td>
     </tr>
     <tr>
       <th>mean</th>
-      <td>362809.449000</td>
-      <td>3.626143</td>
-      <td>3.626549</td>
+      <td>362416.987000</td>
+      <td>3.623684</td>
+      <td>3.623902</td>
+      <td>3.623851</td>
+      <td>5.124652</td>
     </tr>
     <tr>
       <th>std</th>
-      <td>226175.701698</td>
-      <td>1.703533</td>
-      <td>1.704032</td>
+      <td>225967.881825</td>
+      <td>1.705249</td>
+      <td>1.703965</td>
+      <td>1.148088</td>
+      <td>1.985941</td>
     </tr>
     <tr>
       <th>min</th>
       <td>100000.000000</td>
       <td>1.000000</td>
       <td>1.000000</td>
+      <td>1.000000</td>
+      <td>1.000000</td>
     </tr>
     <tr>
       <th>25%</th>
       <td>200000.000000</td>
+      <td>2.000000</td>
+      <td>2.000000</td>
       <td>3.000000</td>
-      <td>3.000000</td>
+      <td>4.000000</td>
     </tr>
     <tr>
       <th>50%</th>
       <td>300000.000000</td>
       <td>3.000000</td>
       <td>3.000000</td>
+      <td>4.000000</td>
+      <td>5.000000</td>
     </tr>
     <tr>
       <th>75%</th>
-      <td>401000.000000</td>
+      <td>400000.000000</td>
+      <td>4.000000</td>
+      <td>4.000000</td>
       <td>5.000000</td>
-      <td>5.000000</td>
+      <td>7.000000</td>
     </tr>
     <tr>
       <th>max</th>
       <td>1000000.000000</td>
       <td>8.000000</td>
+      <td>8.000000</td>
+      <td>5.000000</td>
       <td>8.000000</td>
     </tr>
   </tbody>
@@ -476,15 +485,21 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 </div>
 </section>
+<section id="save-csv-file-to-local-data-folder" class="level2">
+<h2 class="anchored" data-anchor-id="save-csv-file-to-local-data-folder">Save CSV file to local data folder</h2>
+<div class="cell" data-execution_count="26">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>df.to_csv(<span class="st">"data/housing-data.csv"</span>, index<span class="op">=</span><span class="va">False</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
 <section id="save-csv-file-to-s3" class="level2">
 <h2 class="anchored" data-anchor-id="save-csv-file-to-s3">Save CSV file to S3</h2>
 <p>Finally, we save the CSV file to S3. Fortunately, the Pandas API does all of the “heavy lifting” to connect to AWS.</p>
-<div class="cell" data-execution_count="9">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="op">%%</span>script echo skipping</span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>S3_BUCKET_LOCATION <span class="op">=</span> <span class="st">"&lt;BUCKET_LOCATION&gt;"</span></span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>df.to_csv(S3_BUCKET_LOCATION)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell" data-execution_count="25">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="op">%%</span>script echo skipping</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>S3_BUCKET_LOCATION <span class="op">=</span> <span class="st">"&lt;BUCKET_LOCATION&gt;"</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>df.to_csv(S3_BUCKET_LOCATION)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>skipping</code></pre>
 </div>
