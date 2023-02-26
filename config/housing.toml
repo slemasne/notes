@@ -1,37 +1,46 @@
 # Config for creating a housing dataset
 
 [tier-1]
-price.range = "100000-200000"
-bedrooms.range = "1-3"
-bathrooms.range = "1-3"
-council_tax.list = ["A", "B", "C"]
-freehold.list = [true, false]
-garage.list = [false]
-parking.list = [true, false]
+price = "100000-200000"
+bedrooms = "1-3"
+bathrooms = "1-3"
+estate_agent_code = "1-5" 
+transport_link_code = "1-8"
+council_tax = ["A", "B", "C"]
+freehold = [true, false]
+garage = [false]
+parking = [true, false]
+
 
 [tier-2]
-price.range = "200000-300000"
-bedrooms.range = "2-4"
-bathrooms.range = "2-4"
-council_tax.list = ["B", "C", "D"]
-freehold.list = [true, false]
-garage.list = [true, false]
-parking.list = [true, false]
+price = "200000-300000"
+bedrooms = "2-4"
+bathrooms = "2-4"
+estate_agent_code = "2-5" 
+transport_link_code = "2-8"
+council_tax = ["B", "C", "D"]
+freehold = [true, false]
+garage = [true, false]
+parking = [true, false]
 
 [tier-3]
-price.range = "300000-400000"
-bedrooms.range = "3-5"
-bathrooms.range = "3-5"
-council_tax.list = ["D", "E", "F"]
-freehold.list = [true]
-garage.list = [true, false]
-parking.list = [true, false]
+price = "300000-400000"
+bedrooms = "3-5"
+bathrooms = "3-5"
+estate_agent_code = "3-5" 
+transport_link_code = "3-8"
+council_tax = ["D", "E", "F"]
+freehold = [true]
+garage = [true, false]
+parking = [true, false]
 
 [tier-4]
-price.range = "400000-1000000"
-bedrooms.range = "3-8"
-bathrooms.range = "3-8"
-council_tax.list = ["D", "E", "F"]
-freehold.list = [true]
-garage.list = [true, false]
-parking.list = [true]
+price = "400000-1000000"
+bedrooms = "3-8"
+bathrooms = "3-8"
+estate_agent_code = "3-5" 
+transport_link_code = "3-8"
+council_tax = ["D", "E", "F"]
+freehold = [true]
+garage = [true, false]
+parking = [true]

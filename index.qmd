@@ -6,6 +6,8 @@ A blog of mostly Python and data tutorials.
 
 [Build a test CSV dataset](build-a-test-csv-dataset.html)
 
+[Create an SQLite database with data from a DataFrame](create-database-using-sqlite.html)
+
 [Run a Postres Database locally](run-pg-locally.html)
 
 [Data analysis on long distance running](svp.html)
